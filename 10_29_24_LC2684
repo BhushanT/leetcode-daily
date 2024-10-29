@@ -1,0 +1,53 @@
+"""
+https://leetcode.com/problems/maximum-number-of-moves-in-a-grid/description/
+October 29th, 2024 Leetcode 2684
+Leetcode Medium
+Time Taken to Complete: 29 Minutes
+Runtime: 154 ms |Beats 52.17%
+Memory: 42.21 MB |Beats 5.08%
+Time Complexity: N*M
+
+"""
+
+class Solution:
+    def maxMoves(self, grid: List[List[int]]) -> int:
+        # Initialize a memoization dictionary to cache results of maxPath
+        self.memo = {}
+        result = 0
+        
+        # Start path calculations from each cell in the first column
+        for i in range(len(grid)):
+            current_path = self.maxPath(grid, i, 0)
+            result = max(result, current_path)
+            print("Starting Point:", grid[i][0])
+            print("Length:", current_path)
+            
+        return result
+
+    def maxPath(self, grid: List[List[int]], row: int, col: int) -> int:
+        # Check if the result is already cached
+        if (row, col) in self.memo:
+            return self.memo[(row, col)]
+
+        # If at the last column, return 0 since there are no further moves
+        if col == len(grid[0]) - 1:
+            return 0
+
+        starting_point = grid[row][col]
+        path_1, path_2, path_3 = 0, 0, 0
+
+        # Move diagonally up-right
+        if row - 1 >= 0 and grid[row - 1][col + 1] > starting_point:
+            path_1 = self.maxPath(grid, row - 1, col + 1) + 1
+
+        # Move right
+        if grid[row][col + 1] > starting_point:
+            path_2 = self.maxPath(grid, row, col + 1) + 1
+
+        # Move diagonally down-right
+        if row + 1 < len(grid) and grid[row + 1][col + 1] > starting_point:
+            path_3 = self.maxPath(grid, row + 1, col + 1) + 1
+
+        # Cache the result for the current cell
+        self.memo[(row, col)] = max(path_1, path_2, path_3)
+        return self.memo[(row, col)]
