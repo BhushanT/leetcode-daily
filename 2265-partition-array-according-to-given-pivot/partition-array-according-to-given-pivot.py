@@ -1,30 +1,18 @@
 class Solution:
     def pivotArray(self, nums: List[int], pivot: int) -> List[int]:
-        new_nums = [0] * len(nums)
-        before_count = 0
-        pivot_count = 0
-        after_count = 0
+        less = []
+        equal = []
+        greater = []
 
         for num in nums:
             if num < pivot:
-                before_count+=1
-            elif num == pivot:
-                pivot_count+=1
-            else:
-                after_count+=1
-
-            b = 0
-            a = before_count + pivot_count
-
-        for i,num in enumerate(nums):
-            if num < pivot:
-                new_nums[b] = num
-                b+=1
+                less.append(num)
             elif num > pivot:
-                new_nums[a] = num
-                a+=1
+                greater.append(num)
+            else:
+                equal.append(num)
 
-        for i in range(pivot_count):
-            new_nums[i + before_count] = pivot
+        less.extend(equal)
+        less.extend(greater)
 
-        return new_nums
+        return less
